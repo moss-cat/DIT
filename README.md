@@ -5,15 +5,16 @@ A Streamlit application for flashcard-based learning and memory enhancement.
 ## Overview
 
 This project implements a web-based flashcard system using Streamlit that allows users to:
-- Load pre-existing CSV flashcard sets from the repository
-- Upload custom CSV flashcard sets
-- Study and review flashcards through an intuitive UI
+
+* Load pre-existing CSV flashcard sets from the repository
+* Upload custom CSV flashcard sets
+* Study and review flashcards through an intuitive UI
 
 ## Tech Stack
 
-- **Frontend/Backend**: Streamlit
-- **Data Handling**: Pandas
-- **Language**: Python 3.13
+* **Frontend/Backend**: Streamlit
+* **Data Handling**: Pandas
+* **Language**: Python 3.13
 
 ## Implementation Details
 
@@ -34,10 +35,10 @@ front,back,deck
 
 ## Features
 
-- Stateless architecture with session-based user data
-- Dynamic card rendering based on user interaction
-- Progress tracking through session state variables
-- Customizable study parameters
+* Stateless architecture with session-based user data
+* Dynamic card rendering based on user interaction
+* Progress tracking through session state variables
+* Customizable study parameters
 
 ## Setup & Running
 

@@ -1,0 +1,189 @@
+/* Main application styles */
+.main {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #262730;
+    background-color: #f9f9f9;
+}
+
+/* Header styles */
+.stApp header {
+    background-color: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+/* Card container styling */
+.card-container {
+    background-color: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.card-container:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* Question and answer styling */
+.card-question {
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    color: #262730;
+}
+
+.card-answer {
+    font-size: 1.5em;
+    font-weight: 500;
+    padding: 1.25rem;
+    background-color: #f0f7ff;
+    border-radius: 8px;
+    color: #0068c9;
+    border-left: 4px solid #0068c9;
+    text-align: left;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Button styling */
+.stButton > button {
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    padding: 0.5rem 1rem;
+}
+
+.stButton > button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Specific button styles */
+button[data-testid="baseButton-secondary"] {
+    background-color: #f0f2f6;
+    color: #262730;
+}
+
+button[data-testid="baseButton-secondary"]:hover {
+    background-color: #e0e2e6;
+}
+
+button[key="flip_btn"] {
+    background-color: #0068c9;
+    color: white;
+}
+
+button[key="correct_btn"] {
+    background-color: #09ab3b;
+    color: white;
+}
+
+button[key="incorrect_btn"] {
+    background-color: #ff4b4b;
+    color: white;
+}
+
+/* Progress bar styling */
+.stProgress > div > div {
+    background-color: #0068c9;
+}
+
+/* Metrics styling */
+div[data-testid="stMetric"] {
+    background-color: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+div[data-testid="stMetric"] > div:first-child {
+    color: #0068c9;
+}
+
+/* Deck selector styling */
+.stSelectbox label {
+    font-weight: 600;
+    color: #262730;
+}
+
+/* Expander styling */
+.streamlit-expanderHeader {
+    font-weight: 600;
+    color: #262730;
+}
+
+/* File uploader styling */
+.stFileUploader > label {
+    font-weight: 600;
+}
+
+/* Insights and messages */
+.stSuccess {
+    border-left-color: #09ab3b;
+    background-color: rgba(9, 171, 59, 0.05);
+}
+
+.stInfo {
+    border-left-color: #0068c9;
+    background-color: rgba(0, 104, 201, 0.05);
+}
+
+.stWarning {
+    border-left-color: #ff9f36;
+    background-color: rgba(255, 159, 54, 0.05);
+}
+
+/* Study mode radio buttons */
+.stRadio > div {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+    .card-container {
+        padding: 1rem;
+        min-height: 200px;
+    }
+    
+    .card-question {
+        font-size: 1.5em;
+    }
+    
+    .card-answer {
+        font-size: 1.2em;
+        padding: 0.75rem;
+    }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+    .card-container {
+        background-color: #262730;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-question {
+        color: #f9f9f9;
+    }
+    
+    .card-answer {
+        background-color: #1e2130;
+        color: #3a86ff;
+        border-left-color: #3a86ff;
+    }
+    
+    div[data-testid="stMetric"] {
+        background-color: #262730;
+    }
+}
