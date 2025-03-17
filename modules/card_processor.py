@@ -8,7 +8,6 @@ various sources including default decks and user uploads.
 import os
 import pandas as pd
 from pathlib import Path
-from io import StringIO  # Add this import for StringIO
 from typing import Dict, List, Optional, Union
 
 
@@ -59,19 +58,9 @@ class CardProcessor:
             ValueError: If the CSV structure is invalid
         """
         try:
-<<<<<<< HEAD
-            df = pd.read_csv(
-                StringIO(
-                    file_content.decode("utf-8")
-                    if isinstance(file_content, bytes)
-                    else file_content
-                )
-            )
-=======
-            df = pd.read_csv(StringIO(file_content.decode('utf-8') 
-                                     if isinstance(file_content, bytes) 
-                                     else file_content))
->>>>>>> 2c70e2e173fc9249e33d250b2482cc5e5dcd3211
+            df = pd.read_csv(pd.StringIO(file_content.decode('utf-8') 
+                                        if isinstance(file_content, bytes) 
+                                        else file_content))
             return self._validate_dataframe(df)
         except Exception as e:
             raise ValueError(f"Failed to process custom deck: {str(e)}")
