@@ -13,14 +13,14 @@ from modules.ui_components import (
     render_card,
     render_deck_selector,
     render_progress_bar,
-    render_statistics
+    render_statistics,
 )
 
 __all__ = [
-    'CardProcessor',
-    'SessionManager',
-    'render_card',
-    'render_deck_selector',
-    'render_progress_bar',
-    'render_statistics'
+    "CardProcessor",
+    "SessionManager",
+    "render_card",
+    "render_deck_selector",
+    "render_progress_bar",
+    "render_statistics",
 ]
