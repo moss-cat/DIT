@@ -59,6 +59,7 @@ class CardProcessor:
             ValueError: If the CSV structure is invalid
         """
         try:
+<<<<<<< HEAD
             df = pd.read_csv(
                 StringIO(
                     file_content.decode("utf-8")
@@ -66,6 +67,11 @@ class CardProcessor:
                     else file_content
                 )
             )
+=======
+            df = pd.read_csv(StringIO(file_content.decode('utf-8') 
+                                     if isinstance(file_content, bytes) 
+                                     else file_content))
+>>>>>>> 2c70e2e173fc9249e33d250b2482cc5e5dcd3211
             return self._validate_dataframe(df)
         except Exception as e:
             raise ValueError(f"Failed to process custom deck: {str(e)}")
