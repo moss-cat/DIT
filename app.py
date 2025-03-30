@@ -10,10 +10,6 @@ import pandas as pd
 import os
 from pathlib import Path
 
-# Initialize layout preference before any other Streamlit commands
-if "layout_preference" not in st.session_state:
-    st.session_state.layout_preference = "centered"  # Default to centered layout
-
 # Import local modules
 from modules.card_processor import CardProcessor
 from modules.session_manager import SessionManager
@@ -29,11 +25,11 @@ from modules.ui_components import (
     render_upload_form
 )
 
-# Configure page settings with dynamic layout
+# Configure page settings
 st.set_page_config(
     page_title="FlashCard Memory Tool",
     page_icon="📚",
-    layout=st.session_state.layout_preference,
+    layout="wide",
     initial_sidebar_state="collapsed"
 )
 
@@ -43,27 +39,6 @@ def load_css():
     if css_file.exists():
         with open(css_file) as f:
             st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-            
-    # Add custom button alignment CSS
-    button_alignment_css = """
-    /* Button alignment fixes */
-    .home-page-buttons .stButton {
-        position: relative;
-        display: flex;
-        justify-content: flex-start;
-        margin-top: 31px;  /* Aligns with selectbox */
-    }
-    
-    .home-page-buttons .stButton > button {
-        width: 100%;
-    }
-    
-    /* Upload form button alignment */
-    .upload-button .stButton {
-        margin-top: 24px;  /* Specific margin for upload button */
-    }
-    """
-    st.markdown(f"<style>{button_alignment_css}</style>", unsafe_allow_html=True)
 
 # Initialize application
 def initialize_app():
@@ -78,39 +53,6 @@ def initialize_app():
     # Check for default decks
     if 'available_decks' not in st.session_state:
         st.session_state.available_decks = st.session_state.card_processor.get_available_decks()
-
-# Function to toggle between layout modes
-def toggle_layout():
-    if st.session_state.layout_preference == "wide":
-        st.session_state.layout_preference = "centered"
-    else:
-        st.session_state.layout_preference = "wide"
-    st.rerun()  # Required to apply the new layout
-
-# Process actions function to handle action queue
-def process_actions():
-    """Process any pending actions in the queue at the beginning of each render cycle."""
-    if "action_queue" not in st.session_state:
-        st.session_state.action_queue = None
-        
-    if st.session_state.action_queue:
-        action = st.session_state.action_queue
-        st.session_state.action_queue = None
-        
-        # Process the queued action
-        if action.startswith("mark_"):
-            if action == "mark_correct":
-                st.session_state.session_manager.mark_card(correct=True)
-                st.session_state.session_manager.next_card()
-            elif action == "mark_incorrect":
-                st.session_state.session_manager.mark_card(correct=False)
-                st.session_state.session_manager.next_card()
-        elif action == "flip_card":
-            st.session_state.session_manager.toggle_card_face()
-        elif action == "next_card":
-            st.session_state.session_manager.next_card()
-        elif action == "prev_card":
-            st.session_state.session_manager.prev_card()
 
 # Callback functions
 def start_studying(deck_name):
@@ -130,26 +72,22 @@ def handle_custom_deck_upload(file_content):
     except Exception as e:
         st.error(f"Error loading custom deck: {str(e)}")
 
-# Updated button handlers using the action queue pattern
 def handle_flip_card():
-    st.session_state.action_queue = "flip_card"
-    st.rerun()
+    st.session_state.session_manager.toggle_card_face()
 
 def handle_next_card():
-    st.session_state.action_queue = "next_card"
-    st.rerun()
+    st.session_state.session_manager.next_card()
 
 def handle_prev_card():
-    st.session_state.action_queue = "prev_card"
-    st.rerun()
+    st.session_state.session_manager.prev_card()
 
 def handle_mark_correct():
-    st.session_state.action_queue = "mark_correct"
-    st.rerun()
+    st.session_state.session_manager.mark_card(correct=True)
+    handle_next_card()
 
 def handle_mark_incorrect():
-    st.session_state.action_queue = "mark_incorrect"
-    st.rerun()
+    st.session_state.session_manager.mark_card(correct=False)
+    handle_next_card()
 
 def handle_end_session():
     stats = st.session_state.session_manager.end_session()
@@ -160,27 +98,16 @@ def handle_mode_change(mode):
 
 # Main application function
 def main():
-    # Process any pending actions
-    process_actions()
-    
     # Load CSS and initialize app
     load_css()
     initialize_app()
     
+    # Render app header
+    render_app_header()
+    
     # Get current state
     session_manager = st.session_state.session_manager
     is_studying = getattr(st.session_state, 'is_studying', False)
-    
-    # Render app header with context
-    render_app_header(is_studying=is_studying)
-    
-    # Add layout toggle in sidebar
-    with st.sidebar:
-        st.title("Settings")
-        current_layout = "Wide" if st.session_state.layout_preference == "wide" else "Centered"
-        if st.button(f"Switch to {'Centered' if current_layout == 'Wide' else 'Wide'} Layout"):
-            toggle_layout()
-        st.write(f"Current layout: {current_layout}")
     
     # Main application logic
     if not is_studying:
@@ -188,55 +115,15 @@ def main():
         col1, col2 = st.columns([2, 1])
         
         with col1:
-            # Use columns to properly align the deck selector components
-            select_col, button_col = st.columns([3, 1])
-            
-            with select_col:
-                selected_deck = st.selectbox(
-                    "Select a deck to study", 
-                    options=st.session_state.available_decks,
-                    format_func=lambda x: x.replace("_", " ").title(),
-                    key="deck_selector"
-                )
-            
-            with button_col:
-                # Apply CSS class for button alignment
-                with st.container():
-                    st.markdown('<div class="home-page-buttons">', unsafe_allow_html=True)
-                    if st.button("Start Studying", key="start_deck_btn"):
-                        start_studying(selected_deck)
-                    st.markdown('</div>', unsafe_allow_html=True)
+            # Deck selection
+            render_deck_selector(
+                st.session_state.available_decks, 
+                on_select=start_studying
+            )
         
         with col2:
-            # Custom deck upload with aligned button
-            with st.expander("Upload Custom Deck"):
-                st.write("Upload a CSV file with columns: front, back, deck")
-                
-                uploaded_file = st.file_uploader(
-                    "Choose a CSV file",
-                    type="csv",
-                    help="File must have 'front', 'back', and 'deck' columns"
-                )
-                
-                # Apply CSS class for upload button alignment
-                st.markdown('<div class="upload-button">', unsafe_allow_html=True)
-                if uploaded_file is not None and st.button("Load Deck"):
-                    handle_custom_deck_upload(uploaded_file.getvalue())
-                st.markdown('</div>', unsafe_allow_html=True)
-                
-                st.markdown("""
-                **CSV Format Example:**
-                ```
-                front,back,deck
-                "What is Python?","A programming language","Programming"
-                ```
-                """)
-            
-            # Display deck info if available
-            if selected_deck:
-                with st.expander("Deck Information"):
-                    st.info(f"Selected deck: **{selected_deck.replace('_', ' ').title()}**")
-                    st.write("Use the Start Studying button to begin with this deck.")
+            # Custom deck upload
+            render_upload_form(on_upload=handle_custom_deck_upload)
         
         # Display last session statistics if available
         if hasattr(st.session_state, 'last_session_stats') and st.session_state.last_session_stats:
