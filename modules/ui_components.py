@@ -277,13 +277,21 @@ def render_upload_form(on_upload: Callable[[bytes], None]) -> None:
             """)
 
 
-def render_app_header() -> None:
-    """Render the application header."""
+def render_app_header(is_studying=False) -> None:
+    """
+    Render the application header.
+    
+    Args:
+        is_studying (bool): Whether user is currently in study mode
+    """
     st.title("FlashCard Memory Tool")
-    st.markdown("""
-        Improve your memory and knowledge retention with spaced repetition flashcards.
-        Select a deck from the available options or upload your own custom deck.
-    """)
+    
+    # Only show introductory text when not studying
+    if not is_studying:
+        st.markdown("""
+            Improve your memory and knowledge retention with spaced repetition flashcards.
+            Select a deck from the available options or upload your own custom deck.
+        """)
 
 
 def render_end_session_button(on_end: Callable[[], None]) -> None:
