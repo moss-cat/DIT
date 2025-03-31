@@ -25,11 +25,15 @@ from modules.ui_components import (
     render_upload_form
 )
 
+# Initialize layout preference before page config
+if 'layout_preference' not in st.session_state:
+    st.session_state.layout_preference = 'centered'  # Default to centered layout
+
 # Configure page settings
 st.set_page_config(
     page_title="FlashCard Memory Tool",
     page_icon="📚",
-    layout="wide",
+    layout=st.session_state.layout_preference,  # Use the preference we just set
     initial_sidebar_state="collapsed"
 )
 
@@ -96,11 +100,34 @@ def handle_end_session():
 def handle_mode_change(mode):
     st.session_state.study_mode = mode
 
+def handle_layout_change(new_layout):
+    """Handle layout preference change."""
+    if new_layout != st.session_state.layout_preference:
+        st.session_state.layout_preference = new_layout
+        st.experimental_rerun()
+
 # Main application function
 def main():
     # Load CSS and initialize app
     load_css()
     initialize_app()
+    
+    # Layout toggle in sidebar
+    with st.sidebar:
+        st.header("Display Settings")
+        layout_options = ["Centered", "Wide"]  # Changed order to make centered first
+        current_index = 0 if st.session_state.layout_preference == 'centered' else 1
+        
+        selected_layout = st.radio(
+            "Layout Mode",
+            options=layout_options,
+            index=current_index
+        )
+        
+        # Convert display name to internal value and update if needed
+        new_layout_value = selected_layout.lower()
+        if new_layout_value != st.session_state.layout_preference:
+            handle_layout_change(new_layout_value)
     
     # Render app header
     render_app_header()
@@ -112,23 +139,36 @@ def main():
     # Main application logic
     if not is_studying:
         # Display deck selector when not studying
-        col1, col2 = st.columns([2, 1])
+        with st.container():
+            st.markdown("""
+            <style>
+            /* Force consistent container widths for start page */
+            .start-page-container [data-testid="stHorizontalBlock"] {
+                align-items: flex-start;
+            }
+            </style>
+            <div class="start-page-container"></div>
+            """, unsafe_allow_html=True)
+            
+            # Use balanced columns for deck selection and upload
+            col1, col2 = st.columns([3, 2])
+            
+            with col1:
+                # Deck selection with consistent styling
+                render_deck_selector(
+                    st.session_state.available_decks, 
+                    on_select=start_studying
+                )
+            
+            with col2:
+                # Custom deck upload with consistent styling
+                render_upload_form(on_upload=handle_custom_deck_upload)
         
-        with col1:
-            # Deck selection
-            render_deck_selector(
-                st.session_state.available_decks, 
-                on_select=start_studying
-            )
-        
-        with col2:
-            # Custom deck upload
-            render_upload_form(on_upload=handle_custom_deck_upload)
-        
-        # Display last session statistics if available
+        # Full width container for statistics
         if hasattr(st.session_state, 'last_session_stats') and st.session_state.last_session_stats:
+            st.markdown("<hr style='margin: 30px 0 15px 0; opacity: 0.2;'>", unsafe_allow_html=True)
             render_statistics(st.session_state.last_session_stats)
-    
+
     else:
         # Display study session interface
         st.subheader(f"Studying: {st.session_state.current_deck.replace('_', ' ').title()}")

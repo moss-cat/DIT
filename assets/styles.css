@@ -54,42 +54,46 @@
     margin: 0 auto;
 }
 
-/* Button styling */
-.stButton > button {
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    padding: 0.5rem 1rem;
-}
-
-.stButton > button:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Specific button styles */
-button[data-testid="baseButton-secondary"] {
-    background-color: #f0f2f6;
-    color: #262730;
-}
-
-button[data-testid="baseButton-secondary"]:hover {
-    background-color: #e0e2e6;
-}
-
-button[key="flip_btn"] {
-    background-color: #0068c9;
-    color: white;
+/* Simplified button styling - focus only on colors */
+button[key="flip_btn"], 
+button[key="flip_btn_shown"] {
+    background-color: #0068c9 !important;
+    color: white !important;
 }
 
 button[key="correct_btn"] {
-    background-color: #09ab3b;
-    color: white;
+    background-color: #09ab3b !important;
+    color: white !important;
 }
 
 button[key="incorrect_btn"] {
-    background-color: #ff4b4b;
-    color: white;
+    background-color: #ff4b4b !important;
+    color: white !important;
+}
+
+button[key="next_btn"],
+button[key="prev_btn"] {
+    background-color: #f0f2f6 !important;
+    color: #262730 !important;
+}
+
+/* Standardized button styling */
+.stButton > button {
+    height: 38px !important;
+    min-width: 120px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    padding: 0 16px !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+}
+
+.stButton > button:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* Progress bar styling */
@@ -149,6 +153,52 @@ div[data-testid="stMetric"] > div:first-child {
     gap: 1rem;
 }
 
+/* Deck grid styling */
+.deck-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.deck-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 150px;
+    justify-content: space-between;
+}
+
+.deck-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.deck-card .stButton > button {
+    width: 100% !important;
+    margin-top: 10px !important;
+}
+
+.deck-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.upload-container {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-bottom: 15px;
+}
+
 /* Mobile responsiveness */
 @media screen and (max-width: 768px) {
     .card-container {
@@ -185,5 +235,14 @@ div[data-testid="stMetric"] > div:first-child {
     
     div[data-testid="stMetric"] {
         background-color: #262730;
+    }
+
+    .deck-card, .upload-container {
+        background-color: #262730;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    }
+    
+    .deck-title {
+        color: #f9f9f9;
     }
 }
