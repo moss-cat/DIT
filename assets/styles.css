@@ -153,11 +153,11 @@ div[data-testid="stMetric"] > div:first-child {
     gap: 1rem;
 }
 
-/* Deck grid styling */
+/* Updated deck grid styling */
 .deck-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
     margin-bottom: 20px;
 }
 
@@ -171,18 +171,13 @@ div[data-testid="stMetric"] > div:first-child {
     align-items: center;
     text-align: center;
     transition: transform 0.2s, box-shadow 0.2s;
-    min-height: 150px;
-    justify-content: space-between;
+    min-height: auto !important;
+    height: auto !important;
 }
 
 .deck-card:hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-}
-
-.deck-card .stButton > button {
-    width: 100% !important;
-    margin-top: 10px !important;
 }
 
 .deck-title {
@@ -191,6 +186,39 @@ div[data-testid="stMetric"] > div:first-child {
     margin-bottom: 10px;
 }
 
+.deck-button-container {
+    width: 100%;
+    margin-top: 1rem; /* Replaced `auto` with a fixed margin */
+    padding-top: 15px;
+}
+
+/* Tab styling */
+[data-testid="stTabs"] > div:first-child {
+    background-color: white;
+    border-radius: 8px 8px 0 0;
+    margin-top: 1rem;
+}
+
+[data-testid="stTabs"] [data-testid="stTabContent"] {
+    background-color: white;
+    border-radius: 0 0 8px 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Sidebar styling */
+[data-testid="stSidebar"] {
+    background-color: #f8f9fa;
+    border-right: 1px solid #e9ecef;
+}
+
+[data-testid="stSidebar"] [data-testid="stExpander"] {
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+    margin-top: 1rem;
+}
+
+/* Upload container styling */
 .upload-container {
     background-color: white;
     border-radius: 8px;
@@ -214,35 +242,10 @@ div[data-testid="stMetric"] > div:first-child {
         font-size: 1.2em;
         padding: 0.75rem;
     }
-}
-
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-    .card-container {
-        background-color: #262730;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
     
-    .card-question {
-        color: #f9f9f9;
-    }
-    
-    .card-answer {
-        background-color: #1e2130;
-        color: #3a86ff;
-        border-left-color: #3a86ff;
-    }
-    
-    div[data-testid="stMetric"] {
-        background-color: #262730;
-    }
-
-    .deck-card, .upload-container {
-        background-color: #262730;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-    
-    .deck-title {
-        color: #f9f9f9;
+    /* Adjust deck grid for small screens */
+    .deck-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 15px;
     }
 }

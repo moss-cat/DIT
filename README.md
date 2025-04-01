@@ -1,44 +1,46 @@
 # FlashCard Memory Tool
 
-A Streamlit application for flashcard-based learning and memory enhancement.
+A Streamlit-driven web app that helps users study flashcards interactively.
+
+
+debugging showen here: <https://docs.google.com/spreadsheets/d/1ZcmgWSVG_q8s4AN4rV4EP_TQ-BU4sYPGXpqZ8CcAXHc/edit?usp=sharing>
 
 ## Overview
 
-This project implements a web-based flashcard system using Streamlit that allows users to:
+This tool allows you to:
 
-* Load pre-existing CSV flashcard sets from the repository
-* Upload custom CSV flashcard sets
-* Study and review flashcards through an intuitive UI
+* Upload or load existing CSV flashcard sets.
+* Quickly flip through the cards with intuitive UI elements.
+* Track progress using session state to remember how many cards have been studied.
 
 ## Tech Stack
 
-* **Frontend/Backend**: Streamlit
-* **Data Handling**: Pandas
-* **Language**: Python 3.13
+* **Python 3.13** for backend logic.
+* **Streamlit** for rapid UI development and deployment.
+* **Pandas** for CSV parsing and data handling.
 
 ## Implementation Details
 
 ```python
-# Core components:
-# - CSV parser with Pandas
-# - Streamlit UI components
-# - State management for tracking study progress
+# Features:
+# 1. CSV parsing with Pandas
+# 2. Streamlit-based rendering
+# 3. Session-based study tracking
 ```
 
 ## CSV Schema
 
 ```
 front,back,deck
-"What is Time Complexity?","A measure of algorithm efficiency as input grows",CS
-"Define Big O Notation","Upper bound of growth rate",Algorithms
+"What is Time Complexity?","A measure of algorithm efficiency",CS
+"What is Big O?","An upper bound of growth rate",Algorithms
 ```
 
 ## Features
 
-* Stateless architecture with session-based user data
-* Dynamic card rendering based on user interaction
-* Progress tracking through session state variables
-* Customizable study parameters
+* Session-aware progress and deck management.
+* Clean, responsive UI with card flipping animations.
+* Option to upload custom CSV card sets.
 
 ## Setup & Running
 
@@ -51,10 +53,10 @@ streamlit run app.py
 
 ## Planned Enhancements
 
-- [ ] Implement spaced repetition algorithm
-- [ ] Add localStorage support for progress persistence
-- [ ] Implement card difficulty ranking
+- [ ] Implement spaced repetition.
+- [ ] Add localStorage support for persisting stats.
+- [ ] Allow card difficulty ranking.
 
 ## Notes
 
-Academic project, not intended for public deployment.
+This project is for academic exploration and not intended for public production.

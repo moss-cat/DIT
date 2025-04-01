@@ -64,13 +64,14 @@ document.addEventListener('keydown', function(e) {
 </script>
 """
 
+
 class ActionHandler:
     """Centralized handler for all application actions."""
-    
+
     def __init__(self):
         self._initialize_state()
         self._keyboard_shortcuts_initialized = False
-    
+
     def _initialize_state(self):
         """Initialize or reset the action state."""
         if "action_handler" not in st.session_state:
@@ -78,54 +79,58 @@ class ActionHandler:
                 "pending_actions": [],
                 "last_action_time": {},
                 "action_counter": {},
-                "session_id": str(uuid.uuid4())
+                "session_id": str(uuid.uuid4()),
             }
-    
+
     def register_keyboard_shortcuts(self):
         """Register keyboard shortcuts for common actions."""
         if not self._keyboard_shortcuts_initialized:
             html(_KEYBOARD_SHORTCUTS_JS, height=0, width=0)
             self._keyboard_shortcuts_initialized = True
-    
+
     def register_action(self, action_id: str) -> bool:
         """
         Register an action to be processed on next render cycle.
-        
+
         Args:
             action_id (str): Unique identifier for the action
-            
+
         Returns:
             bool: Whether the action was registered
         """
         # Simple debouncing to prevent double-clicks
         current_time = time.time()
-        last_time = st.session_state.action_handler["last_action_time"].get(action_id, 0)
-        
+        last_time = st.session_state.action_handler["last_action_time"].get(
+            action_id, 0
+        )
+
         if current_time - last_time > _DEBOUNCE_INTERVAL:
             # Add to pending actions
             st.session_state.action_handler["pending_actions"].append(action_id)
-            st.session_state.action_handler["last_action_time"][action_id] = current_time
+            st.session_state.action_handler["last_action_time"][
+                action_id
+            ] = current_time
             return True
-        
+
         return False
-    
+
     def process_actions(self) -> None:
         """Process any pending actions."""
         if "action_handler" not in st.session_state:
             return
-        
+
         # Get and clear the pending actions
         actions = st.session_state.action_handler["pending_actions"].copy()
         st.session_state.action_handler["pending_actions"] = []
-        
+
         # Process each action
         for action in actions:
             self._execute_action(action)
-    
+
     def _execute_action(self, action: str) -> None:
         """
         Execute a single action based on its identifier.
-        
+
         Args:
             action (str): Action identifier
         """
@@ -158,63 +163,63 @@ class ActionHandler:
             # This would require specific handling based on your implementation
             pass
 
+
 # Create a global instance of the action handler
 action_handler = ActionHandler()
+
 
 def create_action_button(
     label: str,
     action_id: str,
     key: Optional[str] = None,
-    use_container_width: bool = True
+    use_container_width: bool = True,
 ) -> bool:
     """
     Create a consistently styled action button with reliable behavior.
-    
+
     Args:
         label (str): Button label
         action_id (str): Action identifier
         key (str, optional): Streamlit widget key
         use_container_width (bool): Whether button should use full container width
-        
+
     Returns:
         bool: Whether button was clicked in this render cycle
     """
     # Generate a unique key if not provided
     if key is None:
         key = f"btn_{action_id}_{id(label)}"
-    
+
     # Create the button with standard Streamlit API
-    clicked = st.button(
-        label,
-        key=key,
-        use_container_width=use_container_width
-    )
-    
+    clicked = st.button(label, key=key, use_container_width=use_container_width)
+
     if clicked:
         # Register the action to be processed
         return action_handler.register_action(action_id)
-    
+
     return False
+
 
 def process_actions():
     """Process any pending actions at the beginning of each render cycle."""
     # First make sure keyboard shortcuts are registered
     action_handler.register_keyboard_shortcuts()
-    
+
     # Then process actions from previous cycle
     action_handler.process_actions()
-    
+
     # Process legacy action lists for backward compatibility
     if "actions" in st.session_state and st.session_state.actions:
         actions = st.session_state.actions.copy()
         st.session_state.actions = []
         for action in actions:
             action_handler._execute_action(action)
-            
+
     if "action_queue" in st.session_state and st.session_state.action_queue:
         action = st.session_state.action_queue
         st.session_state.action_queue = None
         action_handler._execute_action(action)
+
 
 # For backward compatibility with existing code
 def _execute_action(action: str) -> None:
